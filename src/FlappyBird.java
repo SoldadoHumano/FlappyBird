@@ -11,6 +11,12 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     int boardWidth = 360;
     int boardHeight = 640;
 
+    // Monitor refresh rate
+
+    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    DisplayMode dm = gd.getDisplayMode();
+    int refreshRate = dm.getRefreshRate();
+
     // Images
     Image backGroundImg;
     Image birdImg;
@@ -95,9 +101,17 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         });
         placePipeTimer.start();
 
-        // Game timer
-        gameLoop = new Timer(1000/280, this);
-        gameLoop.start();
+        if (refreshRate == DisplayMode.REFRESH_RATE_UNKNOWN) {
+            // Game timer
+            System.out.println("Unknow refresh rate.");
+            gameLoop = new Timer(1000 / 60, this);
+            gameLoop.start();
+        } else {
+            // Game timer
+            System.out.println("Refresh rate: " + refreshRate);
+            gameLoop = new Timer(1000 / refreshRate, this);
+            gameLoop.start();
+        }
 
     }
 
